@@ -22,7 +22,7 @@
 
 std::atomic<long long> total_solutions; 
 
-const int PARALLEL_THRESHOLD = 4; 
+const int PARALLEL_THRESHOLD = 16; 
 
 void MVQBP_SUB(MVQBPack cur, vector<vector<int> >& E, int depth) {
     if (cur.SL.size() + cur.CL.size() < cur.thetaL || cur.SR.size() + cur.CR.size() < cur.thetaR) return;
@@ -209,7 +209,7 @@ int main(int argc, char** argv) {
     std::thread timerThread(timerFunction);
     timerThread.detach(); 
 
-    time_t s1 = clock();
+    double s1 = omp_get_wtime();
     CorePack corepack(Graph, degree, graph_size,bi,ceil(theta_r*alpha),ceil(theta_l*beta));
     PrePack prepack(theta_l, theta_r);
     CorePack cur = prepack.PreProcess(corepack);
@@ -227,13 +227,14 @@ int main(int argc, char** argv) {
         #pragma omp single
         {
             MVQBP_SUB(st, cur.E, 0);
+            std::cout << ">>> [DEBUG] OpenMP Threads detected: " << omp_get_num_threads() << " <<<" << std::endl;
         }
     }
-    
-    time_t s2 = clock();
+
+    double s2 = omp_get_wtime();
     cout << "--------------------------------------------------------" << endl;
     cout << "Total Solutions Count: " << total_solutions.load() << endl;
-    cout << "Running Time: " << ((double)(s2-s1)/CLOCKS_PER_SEC) << " sec" << endl << endl;
+    cout << "Running Time: " << s2-s1 << " sec" << endl << endl;
 
     cout.rdbuf(coutbuf);
 

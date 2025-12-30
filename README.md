@@ -5,6 +5,7 @@ This repository implements the parallel maximum (α,β)-quasi biclique algorithm
 ## Compile the code
 
 ```
+$ g++ -fopenmp -O3 MVQB.cpp -o mvqb
 $ g++ -fopenmp -O3 MVQB_Max.cpp -o mvqb_max
 $ g++ -fopenmp -O3 MVQB_Enum.cpp -o mvqb_enum
 ```
@@ -53,13 +54,15 @@ The algorithms support parallel execution. You can control the number of threads
 An example of computing the maximum (α,β)-quasi biclique for our provided example graph '’Example.g‘ is as follows
 
 ```
-$ OMP_NUM_THREADS=8 ./mvqb_max -f "Example.g" -u 2 -v 2 -a 0.7 -b 0.7
+$ OMP_NUM_THREADS=8
+./mvqb_max -f "Example.g" -u 2 -v 2 -a 0.7 -b 0.7
 ```
 
 An example of enumerating/counting all (α,β)-quasi bicliques is as follows
 
 ```
-$ OMP_NUM_THREADS=8 ./mvqb_enum -f "Example.g" -u 2 -v 2 -a 0.7 -b 0.7
+$ OMP_NUM_THREADS=8
+./mvqb_enum -f "Example.g" -u 2 -v 2 -a 0.7 -b 0.7
 ```
 
 ## Result Analysis
